@@ -1,0 +1,26 @@
+BasedOnStyle: Google
+IndentWidth: 2
+TabWidth: 2
+UseTab: Never
+ColumnLimit: 100
+SortIncludes: false
+AlwaysBreakTemplateDeclarations: Yes
+AllowShortFunctionsOnASingleLine: Empty
+BreakBeforeBraces: Custom
+BraceWrapping:
+  AfterClass: false
+  AfterFunction: false
+  AfterControlStatement: Never
+  AfterNamespace: false
+  AfterStruct: false
+  SplitEmptyFunction: true
+  SplitEmptyRecord: true
+  SplitEmptyNamespace: true
+SpaceBeforeParens: ControlStatements
+SpaceAfterCStyleCast: true
+SpacesInParentheses: false
+SpaceAfterTemplateKeyword: true
+PenaltyBreakTemplateDeclaration: 10 
+PointerAlignment: Left
+ReferenceAlignment: Left
+
