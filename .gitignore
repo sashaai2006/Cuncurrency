@@ -5,3 +5,6 @@ compile_commands.json
 *.o
 *.a
 *.out
+AGENTS.md
+concurrency-course/
+.kimi-code

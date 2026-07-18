@@ -29,4 +29,8 @@ class Atomic {
   Value Exchange(Value value) {
     return AtomicExchange(&storage_, value);
   }
+
+  AtomicStorage* Data() {
+    return &storage_;
+  }
 };
