@@ -34,6 +34,13 @@ void CondVar::Wait(UniqueLock& lock) {
   lock.Lock();
 }
 
+template <typename Pred>
+void CondVar::Wait(UniqueLock& lock, Pred pred) {
+  while (!pred) {
+    Wait(lock);
+  }
+}
+
 void CondVar::NotifyOne() {
   var_.FetchAdd(1);
   auto uaddr = const_cast<uint32_t*>(reinterpret_cast<volatile uint32_t*>(var_.Data()));

@@ -15,6 +15,8 @@ class CondVar {
   CondVar(CondVar&&) = delete;
   CondVar& operator=(CondVar&&) = delete;
   void Wait(UniqueLock& lock);
+  template <typename Pred>
+  void Wait(UniqueLock& lock, Pred pred);
   void NotifyOne();
   void NotifyAll();
 };
