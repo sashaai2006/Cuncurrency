@@ -1,4 +1,4 @@
-#include "mutex.hpp"
+#include "condvar.hpp"
 
 #include <cerrno>
 #include <cstdint>
@@ -25,31 +25,23 @@ inline int FutexWake(uint32_t* uaddr, int n) {
 
 }  // namespace
 
-FutexMutex::FutexMutex() : state_() {}
+void CondVar::Wait(UniqueLock& lock) {
+  auto current_var = var_.Load();
+  lock.Unlock();
 
-void FutexMutex::Lock() {
-  if (state_.Exchange(1) == 0) {
-    return;
-  }
-
-  auto uaddr = const_cast<uint32_t*>(reinterpret_cast<volatile uint32_t*>(state_.Data()));
-
-  while (state_.Exchange(2) != 0) {
-    FutexWait(uaddr, 2);
-  }
+  auto uaddr = const_cast<uint32_t*>(reinterpret_cast<volatile uint32_t*>(var_.Data()));
+  FutexWait(uaddr, current_var);
+  lock.Lock();
 }
 
-void FutexMutex::Unlock() {
-  if (state_.Exchange(0) == 1) {
-    return;
-  }
-  auto* uaddr = const_cast<uint32_t*>(reinterpret_cast<volatile uint32_t*>(state_.Data()));
+void CondVar::NotifyOne() {
+  var_.FetchAdd(1);
+  auto uaddr = const_cast<uint32_t*>(reinterpret_cast<volatile uint32_t*>(var_.Data()));
   FutexWake(uaddr, 1);
 }
 
-bool FutexMutex::TryLock() {
-  if (state_.Load() != 0) {
-    return false;
-  }
-  return state_.Exchange(1) == 0;
+void CondVar::NotifyAll() {
+  var_.FetchAdd(1);
+  auto uaddr = const_cast<uint32_t*>(reinterpret_cast<volatile uint32_t*>(var_.Data()));
+  FutexWake(uaddr, -1);
 }

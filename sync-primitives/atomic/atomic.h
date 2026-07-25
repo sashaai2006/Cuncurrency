@@ -12,4 +12,7 @@ void AtomicStore(AtomicStorage* loc, AtomicValue value);
 
 AtomicValue AtomicExchange(AtomicStorage* loc, AtomicValue value);
 
+// Атомарно: *loc += delta. Возвращает СТАРОЕ значение (как std::atomic::fetch_add).
+AtomicValue AtomicFetchAdd(AtomicStorage* loc, AtomicValue delta);
+
 #endif  // __ATOMIC_H__

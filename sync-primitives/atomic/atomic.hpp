@@ -30,6 +30,10 @@ class Atomic {
     return AtomicExchange(&storage_, value);
   }
 
+  Value FetchAdd(Value delta) {
+    return AtomicFetchAdd(&storage_, delta);
+  }
+
   AtomicStorage* Data() {
     return &storage_;
   }
