@@ -1,16 +1,14 @@
 #pragma once
 
 #include "../mutex/raii/unique_lock.hpp"
-
-#include <atomic>
-#include <cstdint>
+#include "../atomic/atomic.hpp"
 
 class CondVar {
  private:
-  std::atomic<uint32_t> var_{0};
+  Atomic var_;
 
  public:
-  CondVar() noexcept = default;
+  CondVar() noexcept : var_{0} {}
   ~CondVar() = default;
   CondVar(const CondVar&) = delete;
   CondVar& operator=(const CondVar&) = delete;
