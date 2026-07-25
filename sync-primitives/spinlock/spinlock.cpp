@@ -17,7 +17,8 @@ void TTASSpinLock::Lock() {
   while (true) {
     while (locked_.Load() != 0) {
     }
-    if (locked_.Exchange(1) != 0) {
+    if (locked_.Exchange(1) == 0) {
+      return;
     }
   }
 }
