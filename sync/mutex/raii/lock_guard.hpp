@@ -2,6 +2,8 @@
 
 #include "../mutex.hpp"
 
+namespace sync {
+
 class LockGuard {
  private:
   FutexMutex* mutex_;
@@ -20,3 +22,5 @@ class LockGuard {
   LockGuard(LockGuard&&) = delete;
   LockGuard& operator=(LockGuard&&) = delete;
 };
+
+}  // namespace sync

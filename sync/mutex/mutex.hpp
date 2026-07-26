@@ -2,6 +2,8 @@
 
 #include "../atomic/atomic.hpp"
 
+namespace sync {
+
 class FutexMutex {
  private:
   Atomic state_;
@@ -17,3 +19,5 @@ class FutexMutex {
   bool TryLock();
   void Unlock();
 };
+
+}  // namespace sync

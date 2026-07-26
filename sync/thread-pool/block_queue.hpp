@@ -5,6 +5,8 @@
 #include <optional>
 #include <queue>
 
+namespace sync {
+
 template <typename T>
 class BlockQueue {
  private:
@@ -51,7 +53,7 @@ void BlockQueue<T>::Push(U&& t) {
     if (!open_) {
       return;
     }
-    queue_.push(std::forward<U>(t));
+    queue_.push(std::forward(t));
   }
   cv_.notify_one();
 }
@@ -79,3 +81,5 @@ size_t BlockQueue<T>::Size() {
   std::lock_guard<std::mutex> lock(mtx_);
   return queue_.size();
 }
+
+}  // namespace sync

@@ -1,3 +1,3 @@
-# Cuncurrency
+# Concurrency
 
-Sync primitives exercises.
+Учебный репозиторий: собственные реализации примитивов синхронизации на C++.

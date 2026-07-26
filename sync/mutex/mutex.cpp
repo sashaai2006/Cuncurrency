@@ -1,6 +1,5 @@
 #include "mutex.hpp"
 
-#include <cerrno>
 #include <cstdint>
 #include <linux/futex.h>
 #include <sys/syscall.h>
@@ -9,10 +8,7 @@
 namespace {
 
 long Futex(uint32_t* uaddr, int futex_op, uint32_t val) {
-  return ::syscall(SYS_futex, uaddr, futex_op, val,
-                   /*timeout=*/nullptr,
-                   /*uaddr2=*/nullptr,
-                   /*val3=*/0);
+  return ::syscall(SYS_futex, uaddr, futex_op, val, nullptr, nullptr, 0);
 }
 
 inline int FutexWait(uint32_t* uaddr, uint32_t expected) {
@@ -25,14 +21,17 @@ inline int FutexWake(uint32_t* uaddr, int n) {
 
 }  // namespace
 
-FutexMutex::FutexMutex() : state_() {}
+namespace sync {
+
+FutexMutex::FutexMutex() : state_{0} {}
 
 void FutexMutex::Lock() {
   if (state_.Exchange(1) == 0) {
     return;
   }
 
-  auto uaddr = const_cast<uint32_t*>(reinterpret_cast<volatile uint32_t*>(state_.Data()));
+  auto* uaddr =
+      const_cast<uint32_t*>(reinterpret_cast<volatile uint32_t*>(state_.Data()));
 
   while (state_.Exchange(2) != 0) {
     FutexWait(uaddr, 2);
@@ -43,7 +42,9 @@ void FutexMutex::Unlock() {
   if (state_.Exchange(0) == 1) {
     return;
   }
-  auto* uaddr = const_cast<uint32_t*>(reinterpret_cast<volatile uint32_t*>(state_.Data()));
+
+  auto* uaddr =
+      const_cast<uint32_t*>(reinterpret_cast<volatile uint32_t*>(state_.Data()));
   FutexWake(uaddr, 1);
 }
 
@@ -53,3 +54,5 @@ bool FutexMutex::TryLock() {
   }
   return state_.Exchange(1) == 0;
 }
+
+}  // namespace sync

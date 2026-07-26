@@ -5,6 +5,8 @@
 #include <mutex>
 #include <utility>
 
+namespace sync {
+
 template <typename Task>
 class Once {
  private:
@@ -51,3 +53,5 @@ class Once {
     }
   }
 };
+
+}  // namespace sync

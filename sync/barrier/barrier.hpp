@@ -1,7 +1,10 @@
 #pragma once
+
 #include <condition_variable>
 #include <cstddef>
 #include <mutex>
+
+namespace sync {
 
 template <size_t NofWorkers>
 class Barrier {
@@ -31,3 +34,5 @@ void Barrier<NofWorkers>::ArriveAndWait() {
   }
   cv_.wait(lock, [&]() -> bool { return generation != generation_; });
 }
+
+}  // namespace sync

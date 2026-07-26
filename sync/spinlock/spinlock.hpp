@@ -1,5 +1,8 @@
 #pragma once
+
 #include "../atomic/atomic.hpp"
+
+namespace sync {
 
 class TASSpinLock {
  private:
@@ -20,3 +23,5 @@ class TTASSpinLock {
   bool TryLock();
   void Unlock();
 };
+
+}  // namespace sync

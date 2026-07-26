@@ -1,5 +1,7 @@
 #include "spinlock.hpp"
 
+namespace sync {
+
 void TASSpinLock::Lock() {
   while (locked_.Exchange(1) != 0) {
   }
@@ -34,3 +36,5 @@ bool TTASSpinLock::TryLock() {
 void TTASSpinLock::Unlock() {
   locked_.Store(0);
 }
+
+}  // namespace sync

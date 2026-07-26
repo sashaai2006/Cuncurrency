@@ -25,20 +25,15 @@ inline int FutexWake(uint32_t* uaddr, int n) {
 
 }  // namespace
 
+namespace sync {
+
 void CondVar::Wait(UniqueLock& lock) {
   auto current_var = var_.Load();
   lock.Unlock();
 
   auto uaddr = const_cast<uint32_t*>(reinterpret_cast<volatile uint32_t*>(var_.Data()));
-  FutexWait(uaddr, current_var);
+  FutexWait(uaddr, static_cast<uint32_t>(current_var));
   lock.Lock();
-}
-
-template <typename Pred>
-void CondVar::Wait(UniqueLock& lock, Pred pred) {
-  while (!pred) {
-    Wait(lock);
-  }
 }
 
 void CondVar::NotifyOne() {
@@ -49,6 +44,8 @@ void CondVar::NotifyOne() {
 
 void CondVar::NotifyAll() {
   var_.FetchAdd(1);
-  auto uaddr = const_cast<uint32_t*>(reinterpret_cast<volatile uint32_t*>(var_.Data()));
+  auto* uaddr = const_cast<uint32_t*>(reinterpret_cast<volatile uint32_t*>(var_.Data()));
   FutexWake(uaddr, -1);
 }
+
+}  // namespace sync

@@ -1,8 +1,10 @@
 #pragma once
 
 #include <cstddef>
-#include <mutex>
 #include <condition_variable>
+#include <mutex>
+
+namespace sync {
 
 template <ptrdiff_t MaxPermits>
 class CountingSemaphore {
@@ -27,7 +29,7 @@ CountingSemaphore<MaxPermits>::CountingSemaphore(ptrdiff_t permits) : permits_{p
 template <ptrdiff_t MaxPermits>
 void CountingSemaphore<MaxPermits>::Acquire() {
   std::unique_lock lock(mtx_);
-  cv_.wait(lock, [this]() -> bool { return permits_ > 0; });  // wait while !pred
+  cv_.wait(lock, [this]() -> bool { return permits_ > 0; });
   --permits_;
 }
 
@@ -37,3 +39,5 @@ void CountingSemaphore<MaxPermits>::Release() {
   ++permits_;
   cv_.notify_one();
 }
+
+}  // namespace sync

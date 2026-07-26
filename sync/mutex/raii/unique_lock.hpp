@@ -2,6 +2,8 @@
 
 #include "../mutex.hpp"
 
+namespace sync {
+
 class UniqueLock {
  private:
   FutexMutex* mutex_{nullptr};
@@ -65,3 +67,5 @@ class UniqueLock {
     return owns_;
   }
 };
+
+}  // namespace sync

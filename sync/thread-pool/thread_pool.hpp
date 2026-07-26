@@ -5,7 +5,10 @@
 #include <cstddef>
 #include <stdexcept>
 #include <thread>
+#include <utility>
 #include <vector>
+
+namespace sync {
 
 template <typename Task>
 class ThreadPool {
@@ -67,5 +70,7 @@ ThreadPool<Task>::~ThreadPool() {
 template <typename Task>
 template <typename U>
 void ThreadPool<Task>::Add(U&& task) {
-  tasks_.Push(std::forward<U>(task));
+  tasks_.Push(std::forward(task));
 }
+
+}  // namespace sync

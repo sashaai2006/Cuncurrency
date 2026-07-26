@@ -5,6 +5,8 @@
 
 #include <utility>
 
+namespace sync {
+
 template <typename T>
 class Mutexed {
  public:
@@ -47,3 +49,5 @@ class Mutexed {
   FutexMutex mutex_;
   T t_;
 };
+
+}  // namespace sync

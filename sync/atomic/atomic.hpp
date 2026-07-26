@@ -4,6 +4,8 @@ extern "C" {
 #include "atomic.h"
 }
 
+namespace sync {
+
 class Atomic {
  private:
   AtomicStorage storage_;
@@ -38,3 +40,5 @@ class Atomic {
     return &storage_;
   }
 };
+
+}  // namespace sync

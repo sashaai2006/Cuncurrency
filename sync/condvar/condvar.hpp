@@ -3,6 +3,8 @@
 #include "../mutex/raii/unique_lock.hpp"
 #include "../atomic/atomic.hpp"
 
+namespace sync {
+
 class CondVar {
  private:
   Atomic var_;
@@ -20,3 +22,12 @@ class CondVar {
   void NotifyOne();
   void NotifyAll();
 };
+
+template <typename Pred>
+void CondVar::Wait(UniqueLock& lock, Pred pred) {
+  while (!pred()) {
+    Wait(lock);
+  }
+}
+
+}  // namespace sync
